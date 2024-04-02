@@ -1,7 +1,7 @@
 function tsp_hk(distance_matrix) {
     const n = distance_matrix.length;
     const memo = new Map();
-    // to store the results of subproblems. If a subproblem has been solved before, its result is retrieved from the memo rather than recomputing it
+
     if (n === 0) {
         return 0;
     }
@@ -38,8 +38,10 @@ function tsp_hk(distance_matrix) {
     for (let startCity of cities) {
         const newCities = cities.filter(city => city !== startCity);
         const tourLength = heldKarp(newCities, startCity);
+        console.log(`Tour length starting from city ${startCity}: ${tourLength}`);
         minTourLength = Math.min(minTourLength, tourLength);
     }
 
+    console.log(`Minimum tour length: ${minTourLength}`);
     return minTourLength;
 }
