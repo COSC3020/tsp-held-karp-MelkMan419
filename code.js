@@ -2,7 +2,7 @@ function tsp_hk(distance_matrix) {
     const n = distance_matrix.length;
     const memo = new Map();
 
-    if (n === 0) {
+    if (!distance_matrix || distance_matrix.length === 0) {
         return 0;
     }
 
