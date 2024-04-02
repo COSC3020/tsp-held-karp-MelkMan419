@@ -38,10 +38,8 @@ function tsp_hk(distance_matrix) {
     for (let startCity of cities) {
         const newCities = cities.filter(city => city !== startCity);
         const tourLength = heldKarp(newCities, startCity);
-        console.log(`Tour length starting from city ${startCity}: ${tourLength}`);
         minTourLength = Math.min(minTourLength, tourLength);
     }
 
-    console.log(`Minimum tour length: ${minTourLength}`);
     return minTourLength;
 }
