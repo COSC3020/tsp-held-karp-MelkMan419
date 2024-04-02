@@ -1,5 +1,5 @@
 function tsp_hk(distance_matrix) {
-    if (distance_matrix == null || distance_matrix.length === 0) {
+    if (distance_matrix == [] || distance_matrix.length === 0) {
         return 0;
     }
 
