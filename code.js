@@ -1,26 +1,28 @@
-function tsp_hk(distance_matrix){
-    def held_karp_dp(distance_matrix):
-        n = len(distance_matrix)
-        memo = {}
-    
-        def held_karp(cities, start):
-            if (tuple(cities), start) in memo:
-                return memo[(tuple(cities), start)]
-    
-            if len(cities) == 1:
-                return distance_matrix[start][cities[0]]
-    
-            min_cost = float('inf')
-            for city in cities:
-                if city == start:
-                    continue
-                new_cities = tuple([c for c in cities if c != city])
-                cost = held_karp(new_cities, city) + distance_matrix[start][city]
-                min_cost = min(min_cost, cost)
-    
-            memo[(tuple(cities), start)] = min_cost
-            return min_cost
-    
-        all_cities = tuple(range(1, n)) 
-        return min(held_karp(all_cities, city) + distance_matrix[0][city] for city in all_cities)
+function tsp_hk(distance_matrix) {
+    const n = distance_matrix.length;
+    const ALL_SET_MASK = (1 << n) - 1;
+    const memo = new Array(n).fill(null).map(() => new Array(1 << n).fill(-1));
+
+    function heldKarp(city, visited) {
+        if (visited === ALL_SET_MASK) {
+            return distance_matrix[city][0];
+        }
+
+        if (memo[city][visited] !== -1) {
+            return memo[city][visited];
+        }
+
+        let minCost = Infinity;
+        for (let nextCity = 0; nextCity < n; nextCity++) {
+            if ((visited & (1 << nextCity)) === 0) {
+                const newCost = distance_matrix[city][nextCity] + heldKarp(nextCity, visited | (1 << nextCity));
+                minCost = Math.min(minCost, newCost);
+            }
+        }
+
+        memo[city][visited] = minCost;
+        return minCost;
+    }
+
+    return heldKarp(0, 1); // Start with city 0 (assuming city 0 is the start city)
 }
