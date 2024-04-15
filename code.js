@@ -1,7 +1,7 @@
 function tsp_hk(distance_matrix) {
     var numberOfCities = distance_matrix.length;
 
-    if (numberOfCities === 0 || distance_matrix[0].length === 0) {
+    if (numberOfCities == 0 || distance_matrix[0].length == 0) {
         return 0;
     }
 
