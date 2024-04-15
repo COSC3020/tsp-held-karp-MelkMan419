@@ -24,5 +24,6 @@ function tsp_hk(distance_matrix) {
         return minCost;
     }
 
-    return heldKarp(0, 1); // Start with city 0 (assuming city 0 is the start city)
+    let result = heldKarp(0, 1); // Start with city 0 (assuming city 0 is the start city)
+    return isFinite(result) ? result : Infinity;
 }
