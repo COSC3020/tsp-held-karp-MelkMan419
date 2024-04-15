@@ -1,45 +1,24 @@
-function tsp_hk(distance_matrix) {
-    if (distance_matrix == [] || distance_matrix.length === 0) {
-        return 0;
-    }
+def held_karp_dp(distance_matrix):
+    n = len(distance_matrix)
+    memo = {}
 
-    const n = distance_matrix.length;
-    const memo = new Map();
+    def held_karp(cities, start):
+        if (tuple(cities), start) in memo:
+            return memo[(tuple(cities), start)]
 
-    function heldKarp(cities, start) {
-        if (memo.has(cities.toString())) {
-            return memo.get(cities.toString());
-        }
+        if len(cities) == 1:
+            return distance_matrix[start][cities[0]]
 
-        if (cities.length === 2) {
-            const otherCity = cities.find(city => city !== start);
-            return distance_matrix[start][otherCity];
-        }
+        min_cost = float('inf')
+        for city in cities:
+            if city == start:
+                continue
+            new_cities = tuple([c for c in cities if c != city])
+            cost = held_karp(new_cities, city) + distance_matrix[start][city]
+            min_cost = min(min_cost, cost)
 
-        let minDist = Infinity;
-        for (let city of cities) {
-            if (city !== start) {
-                const newCities = cities.filter(c => c !== start);
-                const dist = heldKarp(newCities, city) + distance_matrix[start][city];
-                minDist = Math.min(minDist, dist);
-            }
-        }
+        memo[(tuple(cities), start)] = min_cost
+        return min_cost
 
-        memo.set(cities.toString(), minDist);
-        return minDist;
-    }
-
-    let cities = [];
-    for (let i = 0; i < n; i++) {
-        cities.push(i);
-    }
-
-    let minTourLength = Infinity;
-    for (let startCity of cities) {
-        const newCities = cities.filter(city => city !== startCity);
-        const tourLength = heldKarp(newCities, startCity);
-        minTourLength = Math.min(minTourLength, tourLength);
-    }
-
-    return minTourLength;
-}
+    all_cities = tuple(range(1, n))  # Exclude the starting city
+    return min(held_karp(all_cities, city) + distance_matrix[0][city] for city in all_cities)
