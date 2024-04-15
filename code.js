@@ -20,5 +20,5 @@ def held_karp_dp(distance_matrix):
         memo[(tuple(cities), start)] = min_cost
         return min_cost
 
-    all_cities = tuple(range(1, n))  # Exclude the starting city
+    all_cities = tuple(range(1, n)) 
     return min(held_karp(all_cities, city) + distance_matrix[0][city] for city in all_cities)
