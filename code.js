@@ -5,7 +5,6 @@ function tsp_hk(distance_matrix) {
         return 0;
     }
 
-
     var shortestLengthTour = Infinity;
     var cache = {};
 
@@ -15,8 +14,8 @@ function tsp_hk(distance_matrix) {
     }
 
     function tsp_hk_rec(cities, start) {
-        if (cities.length === 1) {
-            return distance_matrix[start][cities[0]];
+        if (cities.length === 0) {
+            return distance_matrix[start][0]; // Return to the starting city
         } else {
             var key = cities.join(',') + ',' + start;
             if (cache[key] !== undefined) {
