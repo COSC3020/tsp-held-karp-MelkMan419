@@ -1,29 +1,39 @@
 function tsp_hk(distance_matrix) {
-    const n = distance_matrix.length;
-    const ALL_SET_MASK = (1 << n) - 1;
-    const memo = new Array(n).fill(null).map(() => new Array(1 << n).fill(-1));
+    var numberOfCities = distance_matrix.length;
 
-    function heldKarp(city, visited) {
-        if (visited === ALL_SET_MASK) {
-            return distance_matrix[city][0];
-        }
-
-        if (memo[city][visited] !== -1) {
-            return memo[city][visited];
-        }
-
-        let minCost = Infinity;
-        for (let nextCity = 0; nextCity < n; nextCity++) {
-            if ((visited & (1 << nextCity)) === 0) {
-                const newCost = distance_matrix[city][nextCity] + heldKarp(nextCity, visited | (1 << nextCity));
-                minCost = Math.min(minCost, newCost);
-            }
-        }
-
-        memo[city][visited] = minCost;
-        return minCost;
+    if (numberOfCities === 0 || distance_matrix[0].length === 0) {
+        return 0;
     }
 
-    let result = heldKarp(0, 1); // Start with city 0 (assuming city 0 is the start city)
-    return isFinite(result) ? result : Infinity;
+    var shortestLengthTour = Infinity;
+    var cache = {};
+
+    for (var startCity = 0; startCity < numberOfCities; startCity++) {
+        var currentTourLength = tsp_hk_rec(Array.from(Array(numberOfCities).keys()).filter(city => city !== startCity), startCity);
+        shortestLengthTour = Math.min(shortestLengthTour, currentTourLength);
+    }
+
+    function tsp_hk_rec(cities, start) {
+        if (cities.length === 1) {
+            return distance_matrix[start][cities[0]];
+        } else {
+            var key = cities.join(',') + ',' + start;
+            if (cache[key] !== undefined) {
+                return cache[key];
+            }
+
+            var minLengthTour = Infinity;
+            var newCities = cities.filter(city => city !== start);
+
+            newCities.forEach(city => {
+                var currentTourLength = tsp_hk_rec(newCities, city) + distance_matrix[start][city];
+                minLengthTour = Math.min(minLengthTour, currentTourLength);
+            });
+
+            cache[key] = minLengthTour;
+            return minLengthTour;
+        }
+    }
+
+    return shortestLengthTour;
 }
