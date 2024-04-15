@@ -10,7 +10,7 @@ function tsp_hk(distance_matrix) {
     var cache = {};
 
     for (var startCity = 0; startCity < NUMCities; startCity++) {
-        var currentTourLength = tsp_hk_rec(Array.from(Array(numberOfCities).keys()).filter(city => city !== startCity), startCity);
+        var currentTourLength = tsp_hk_rec(Array.from(Array(NUMCities).keys()).filter(city => city !== startCity), startCity);
         shortestLengthTour = Math.min(shortestLengthTour, currentTourLength);
     }
 
