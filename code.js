@@ -31,6 +31,8 @@ function tspHK(distanceMatrix) {
     
     const initialVisited = 1; // Start from city 0
     const minDistance = calculateMinDistance(initialVisited, 0);
-    
+
+
     return minDistance;
 }
+
