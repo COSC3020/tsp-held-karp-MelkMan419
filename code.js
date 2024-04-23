@@ -1,39 +1,36 @@
-function tsp_hk(distance_matrix) {
-    var NUMCities = distance_matrix.length;
-
-    // Check for trivial cases with empty or singular matrix
-    if (NUMCities === 0 || distance_matrix[0].length === 0) {
+function tspHK(distanceMatrix) {
+    if (distanceMatrix.length <= 1) {
         return 0;
     }
-
-    var shortestLengthTour = Infinity;
-    var cache = {};
-
-    for (var startCity = 0; startCity < NUMCities; startCity++) {
-        var currentTourLength = tsp_hk_rec(Array.from(Array(NUMCities).keys()).filter(city => city !== startCity), startCity, startCity);
-        shortestLengthTour = Math.min(shortestLengthTour, currentTourLength);
-    }
-
-    function tsp_hk_rec(cities, currentCity, startCity) {
-        if (cities.length === 0) {
-            return distance_matrix[currentCity][startCity];  // Complete the cycle
+    
+    const numCities = distanceMatrix.length;
+    const memo = Array.from({ length: 1 << numCities }, () => Array(numCities).fill(-1));
+    
+    const calculateMinDistance = (visited, currentCity) => {
+        if (visited === (1 << numCities) - 1) {
+            return distanceMatrix[currentCity][0];
         }
-
-        var key = cities.join(',') + ',' + currentCity;
-        if (cache[key] !== undefined) {
-            return cache[key];
+        
+        if (memo[visited][currentCity] !== -1) {
+            return memo[visited][currentCity];
         }
-
-        var minLengthTour = Infinity;
-        cities.forEach(nextCity => {
-            var remainingCities = cities.filter(city => city !== nextCity);
-            var currentTourLength = distance_matrix[currentCity][nextCity] + tsp_hk_rec(remainingCities, nextCity, startCity);
-            minLengthTour = Math.min(minLengthTour, currentTourLength);
-        });
-
-        cache[key] = minLengthTour;
-        return minLengthTour;
-    }
-
-    return shortestLengthTour;
+        
+        let minDist = Infinity;
+        for (let nextCity = 0; nextCity < numCities; nextCity++) {
+            const nextCityBit = 1 << nextCity;
+            if (!(visited & nextCityBit)) {
+                const newVisited = visited | nextCityBit;
+                const newDistance = distanceMatrix[currentCity][nextCity] + calculateMinDistance(newVisited, nextCity);
+                minDist = Math.min(minDist, newDistance);
+            }
+        }
+        
+        memo[visited][currentCity] = minDist;
+        return minDist;
+    };
+    
+    const initialVisited = 1; // Start from city 0
+    const minDistance = calculateMinDistance(initialVisited, 0);
+    
+    return minDistance;
 }
